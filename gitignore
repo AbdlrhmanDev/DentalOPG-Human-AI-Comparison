@@ -1,0 +1,42 @@
+# Python and notebook caches
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.venv/
+venv/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*credentials*.json
+*token*.json
+
+# Private audit materials
+*PRIVATE_AUDIT*
+*UNREVIEWED*
+07_NOTEBOOK_AUDIT_PRIVATE.csv
+
+# Large model weights, archives, and original image data
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.zip
+*.7z
+*.rar
+*.dcm
+*.dicom
+
+# Common radiograph and image export directories
+**/raw_images/
+**/source_images/
+**/original_dataset/
+**/patient_data/
+
+# System artifacts
+.DS_Store
+Thumbs.db
