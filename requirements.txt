@@ -1,0 +1,20 @@
+# Full research workflow dependencies (Colab-based; not a frozen lockfile)
+# Exact tested training framework version; other packages were not all locked.
+ultralytics==8.4.175
+torch
+numpy<3
+pandas
+scipy
+scikit-learn
+Pillow
+imagehash
+PyYAML
+matplotlib
+openpyxl
+tqdm
+statsmodels
+lxml
+opencv-python-headless
+ipywidgets
+IPython
+nbformat
