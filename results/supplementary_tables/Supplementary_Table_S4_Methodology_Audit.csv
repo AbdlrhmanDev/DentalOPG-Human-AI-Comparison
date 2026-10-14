@@ -1,0 +1,18 @@
+Audit domain,Verification item,Result
+Dataset,Final radiographs,"1,522"
+Dataset,Train / validation / test,"1,065 / 303 / 154"
+Reference,Test reference boxes,588
+Reference,Images without six-class reference boxes,23
+Reader QC,Dentist 01 boxes / images,565 / 154
+Reader QC,Dentist 02 boxes / images,606 / 154
+Reader QC,Invalid or exactly duplicated boxes,0 for both dentists
+Image integrity,Exact cross-split duplicate pairs,0
+Image integrity,dHash candidate pairs,2294
+Image integrity,Advanced high-similarity flags,0
+Image integrity,Candidate pairs with SSIM >= 0.95,0
+Matching audit,Combinations reproduced,10/10
+Matching audit,Changes in matched TP counts,0
+Expert review,Selected images,8
+Expert review,Independent expert CVAT boxes,14
+Expert review,Accepted / rejected detection proposals,23 / 2
+Study limitation,Patient-level independence,Not established

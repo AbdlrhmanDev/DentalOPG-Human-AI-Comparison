@@ -1,0 +1,7 @@
+AI model,Dentist,Difference (pp),Nominal 95% lower,Nominal 95% upper,Bonferroni CI lower,Bonferroni CI upper,Adjusted CI excludes zero
+YOLOv8s,Dentist 01,9.13,4.57,13.55,3.0,15.11,True
+YOLOv8s,Dentist 02,3.84,-0.99,8.51,-2.73,10.15,False
+YOLO11s,Dentist 01,4.78,0.94,8.51,-0.29,9.74,False
+YOLO11s,Dentist 02,-0.51,-5.25,4.07,-6.97,5.53,False
+RT-DETR-L,Dentist 01,9.8,5.18,14.25,3.41,15.73,True
+RT-DETR-L,Dentist 02,4.51,-0.78,9.46,-2.62,11.23,False

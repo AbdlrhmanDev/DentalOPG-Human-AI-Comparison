@@ -1,0 +1,7 @@
+Comparison,AI minus dentist F1 (pp),Bonferroni CI lower (pp),Bonferroni CI upper (pp),Adjusted CI excludes zero
+YOLOv8s vs Dentist 01,9.13,3.0,15.11,True
+YOLOv8s vs Dentist 02,3.84,-2.73,10.15,False
+YOLO11s vs Dentist 01,4.78,-0.29,9.74,False
+YOLO11s vs Dentist 02,-0.51,-6.97,5.53,False
+RT-DETR-L vs Dentist 01,9.8,3.41,15.73,True
+RT-DETR-L vs Dentist 02,4.51,-2.62,11.23,False

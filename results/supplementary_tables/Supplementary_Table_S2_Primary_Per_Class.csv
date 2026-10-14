@@ -1,0 +1,31 @@
+Evaluator,Dental finding,Reference instances,TP,FP,FN,Precision (%),Recall (%),F1 (%)
+Dentist 01,Caries,165,78,84,87,48.15,47.27,47.71
+Dentist 01,Missing Teeth,159,81,72,78,52.94,50.94,51.92
+Dentist 01,Root Canal Treatment,91,28,44,63,38.89,30.77,34.36
+Dentist 01,Filling,55,30,17,25,63.83,54.55,58.82
+Dentist 01,Crown,64,55,7,9,88.71,85.94,87.3
+Dentist 01,Unerupted Wisdom Teeth,54,49,20,5,71.01,90.74,79.67
+Dentist 02,Caries,165,86,92,79,48.31,52.12,50.15
+Dentist 02,Missing Teeth,159,107,52,52,67.3,67.3,67.3
+Dentist 02,Root Canal Treatment,91,28,58,63,32.56,30.77,31.64
+Dentist 02,Filling,55,31,22,24,58.49,56.36,57.41
+Dentist 02,Crown,64,59,7,5,89.39,92.19,90.77
+Dentist 02,Unerupted Wisdom Teeth,54,53,11,1,82.81,98.15,89.83
+YOLOv8s,Caries,165,77,30,88,71.96,46.67,56.62
+YOLOv8s,Missing Teeth,159,96,35,63,73.28,60.38,66.21
+YOLOv8s,Root Canal Treatment,91,36,26,55,58.06,39.56,47.06
+YOLOv8s,Filling,55,35,21,20,62.5,63.64,63.06
+YOLOv8s,Crown,64,62,6,2,91.18,96.88,93.94
+YOLOv8s,Unerupted Wisdom Teeth,54,44,24,10,64.71,81.48,72.13
+YOLO11s,Caries,165,87,76,78,53.37,52.73,53.05
+YOLO11s,Missing Teeth,159,97,39,62,71.32,61.01,65.76
+YOLO11s,Root Canal Treatment,91,17,10,74,62.96,18.68,28.81
+YOLO11s,Filling,55,28,11,27,71.79,50.91,59.57
+YOLO11s,Crown,64,60,10,4,85.71,93.75,89.55
+YOLO11s,Unerupted Wisdom Teeth,54,36,16,18,69.23,66.67,67.92
+RT-DETR-L,Caries,165,73,30,92,70.87,44.24,54.48
+RT-DETR-L,Missing Teeth,159,107,49,52,68.59,67.3,67.94
+RT-DETR-L,Root Canal Treatment,91,46,40,45,53.49,50.55,51.98
+RT-DETR-L,Filling,55,34,26,21,56.67,61.82,59.13
+RT-DETR-L,Crown,64,61,9,3,87.14,95.31,91.04
+RT-DETR-L,Unerupted Wisdom Teeth,54,46,12,8,79.31,85.19,82.14

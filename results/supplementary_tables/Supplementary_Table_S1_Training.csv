@@ -1,0 +1,27 @@
+Parameter,YOLOv8s,YOLO11s,RT-DETR-L
+Input size (pixels),640,640,640
+Batch size,8,8,2
+Maximum epochs,100,100,100
+Early stopping patience,25,25,25
+Optimizer configuration,auto,auto,auto
+Configured lr0,0.01,0.01,0.01
+Configured lrf,0.01,0.01,0.01
+Configured momentum,0.937,0.937,0.937
+Configured weight decay,0.0005,0.0005,0.0005
+Warm-up epochs,3.0,3.0,3.0
+Random seed,42,42,42
+Deterministic execution,True,True,False
+Hue augmentation,0.015,0.015,0.015
+Saturation augmentation,0.7,0.7,0.7
+Value augmentation,0.4,0.4,0.4
+Degrees,0.0,0.0,0.0
+Translation,0.1,0.1,0.1
+Scaling,0.5,0.5,0.5
+Shearing,0.0,0.0,0.0
+Horizontal flipping,0.5,0.5,0.5
+Vertical flipping,0.0,0.0,0.0
+Mosaic,1.0,1.0,1.0
+MixUp,0.0,0.0,0.0
+Close mosaic (epochs),10,10,10
+Completed epochs,96,60,77
+Best checkpoint epoch,71,35,52
