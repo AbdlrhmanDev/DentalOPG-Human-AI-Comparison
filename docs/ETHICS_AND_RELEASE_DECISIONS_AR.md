@@ -1,8 +1,9 @@
-# نقاط القرار قبل الإرسال
+# Ethics and release decisions — documentation note
 
-1. **الأخلاقيات:** المخطوطة الحالية تنص على عدم الحصول على موافقة أو إعفاء مستقل لهذه الدراسة الثانوية. تحقّق من الجهة الأخلاقية المختصة، واحصل على قرار أو إفادة رسمية إن لزم. لا يجوز أن تصف موافقة ناشر البيانات الأصلي وكأنها موافقة لدراستك.
-2. **رد المحكّم الثالث:** تم إعادة حساب مطابقة الصناديق الخارجية من تنبؤات مؤرشفة، ولم يتم إعادة توليدها من أوزان النماذج. صف النتيجة بدقة.
-3. **النشر:** الحزمة هنا ليست منشورة على GitHub. لا تكتب أنها متاحة علنًا حتى ترفعها وتتأكد من رابطها.
-4. **ملفات التنبؤات:** لم تُدرج في الحزمة العامة المرشحة. قرّر سياسة مشاركتها بعد فحص معلومات الصور والخصوصية وحقوق النشر.
-5. **Expert 03:** الجولة الأولى موثقة (8 صور، 14 صندوقًا على 7 صور). القرارات الفردية للجولة الثانية (23/2) لم تستعد؛ لا تذكرها كدليل قابل للتحقق.
-6. **الشكل Fig 2c:** يجب مطابقة فترات الثقة مع إعادة تحليل bootstrap الداخلي (seed 20261112) قبل نشر النسخة النهائية.
+1. The manuscript uses two publicly available retrospective panoramic-radiograph datasets. No new recruitment, patient contact, or new imaging occurred. The authors did not obtain a separate written study-specific ethics approval or exemption; **do not claim that a determination exists**. The authors should check the requirements of their institution and the journal.
+2. The external bounding-box scoring code and aggregated/per-image results **have been published** in the public DentalOPG GitHub repository. However, retraining or regenerating predictions from checkpoint weights has not been reproduced in this public package.
+3. The complete external evaluation from archived prediction JSONs was repeated by the study team using official MOPG-7 Version 2 test COCO annotations. This is not independent clinical adjudication.
+4. Original model prediction JSONs are **not part of the core public update** until a data-release/privacy/license review. Avoid uploading source radiographs, image read-error logs, or patient identifiers.
+5. Expert 03: 8 independently reviewed images, 14 boxes in 7 images were recovered in the original CVAT export. The individual round-2 acceptance/rejection decisions (the originally reported 23/2 split) have not been recovered; do not represent that claim as independently verifiable.
+6. Internal bootstrap: revised 20,000 paired image-level resamples, seed 20261112, Bonferroni correction for six contrasts. This is a new run, **not** a reconstruction of the historical seed. Use this table consistently with the manuscript, Fig. 2c and response letter.
+7. The repository contains an MIT `LICENSE`. Before relying on this code license to authorize third-party reuse, verify rights/approval from all relevant authors and contributors; it does not govern the publishers' datasets.

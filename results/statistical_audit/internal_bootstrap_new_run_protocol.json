@@ -1,0 +1,33 @@
+{
+  "analysis": "NEW recalculation of internal paired image-level bootstrap",
+  "NOT_claimed_to_reproduce_historical_seed": true,
+  "n_images": 154,
+  "number_of_evaluators": 5,
+  "reference_boxes": 588,
+  "source_file": "per_image_detection_counts.csv",
+  "source_sha256": "0088a4a374fc9a80fa5ea748a7ddbfa8df8ed436e4df7fa63b63a8544f0fbbee",
+  "bootstrap_replicates": 20000,
+  "random_seed": 20261112,
+  "random_number_generator": "numpy.random.default_rng (PCG64)",
+  "sampling_unit": "radiograph; paired indices shared across evaluators",
+  "point_estimate": "micro-F1 calculated from sum of TP/FP/FN over images",
+  "primary_iou": 0.5,
+  "exploratory_iou": 0.25,
+  "comparisons": "six AI vs dentist comparisons",
+  "family_size": 6,
+  "Bonferroni_adjusted_CI_pct": 99.16666666666667,
+  "nominal_CI_pct": 95,
+  "percentile_bounds": [
+    0.4166666666666667,
+    99.58333333333333
+  ],
+  "limitations": [
+    "Only per-image detection counts are available; this does not reproduce box matching from raw images",
+    "No patient identifiers for patient-level clustered resampling",
+    "Different RNG seed and/or bootstrap implementation from the original may yield small CI differences"
+  ],
+  "software_versions": {
+    "numpy": "2.3.5",
+    "pandas": "2.2.3"
+  }
+}

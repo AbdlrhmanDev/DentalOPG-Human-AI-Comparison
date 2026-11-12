@@ -1,8 +1,26 @@
-OFFICIAL INPUTS NOT INCLUDED IN THIS CANDIDATE PACKAGE:
-1) MOPG-7 Version 2 / annotations/instances_test.json (210-image official test split)
-2) MOPG-7 Version 2 / metadata/class_definitions.csv (defines semantic category IDs)
-3) Archived prediction JSONs at low confidence floor 0.01: YOLOv8s_predictions.json, YOLO11s_predictions.json, RT_DETR_L_predictions.json
+# Inputs required to independently rerun the external MOPG-7 evaluation
 
-Do not publish radiographs or patient-identifying information.
-The source COCO test file and metadata must be obtained from the data publisher.
-The prediction JSONs are in the authors' private archive; confirm rights/ethical clearance before any public distribution.
+The published source code uses:
+
+1. Official **MOPG-7 Version 2** `annotations/instances_test.json` (210 images) — obtain from https://doi.org/10.17632/t66ytdrhf2.2.
+2. Official `metadata/class_definitions.csv` from the **same version** of that dataset.
+3. Archived model prediction JSONs (without image pixel data) named exactly:
+   - `YOLOv8s_predictions.json`
+   - `YOLO11s_predictions.json`
+   - `RT_DETR_L_predictions.json`
+
+The core public repository includes code and numerical reports, but **not** these three raw prediction JSONs pending the authors' release review. Use a private approved copy when replicating the analysis. The file SHA-256 hashes are documented in `results/external_reproduction_audit.json`.
+
+With these files, run:
+
+```bash
+python code/reproduce_external_mopg7.py \
+  --coco /path/to/annotations/instances_test.json \
+  --class-definitions /path/to/metadata/class_definitions.csv \
+  --predictions /path/to/prediction_jsons \
+  --out external_reproduced_results
+```
+
+The script fails if the official reference counts or model thresholds do not match the fixed protocol; do **not** change the operating thresholds to force `PASS`.
+
+The package does not recreate inference from weights or train the three models. Do not redistribute patient radiographs or private clinical identifiers.

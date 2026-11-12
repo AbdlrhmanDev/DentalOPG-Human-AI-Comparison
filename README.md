@@ -1,47 +1,66 @@
-# MOPG-7 external evaluation — reproducibility package
+# DentalOPG Human–AI Comparison — reproducibility resources
 
-This is a computational reproduction of the four-class *external AI-only evaluation* in the DentalOPG human–AI manuscript. It does **not** re-run model training or inference from weights, nor independently establish clinical diagnostic validity.
+This public repository provides code, fixed-threshold detection metrics, and numerical audit outputs for the manuscript comparing two dentists and three AI detectors on panoramic radiographs. It does **not** establish clinical diagnostic validity.
 
-## What has been checked
+## Data and scope
 
-The manuscript's archived prediction files were scored against the official MOPG-7 v2 COCO test reference: 210 images; 1,088 reference boxes across all seven categories, of which 876 are eligible for the four mapped categories. The uploaded run reported `PASS`, with zero mismatched class-specific TP/FP/FN counts at IoU 0.50 and 0.25. Calculated micro-F1 is 41.46868%/58.42333% (RT-DETR-L), 37.89210%/52.19573% (YOLOv8s), and 31.76265%/44.44444% (YOLO11s) for IoU 0.50/0.25.
+- **Internal:** DentalOPG-1550 Version 3 (https://doi.org/10.17632/rtt726b26d.3), 154 evaluation radiographs and 588 target reference boxes; six classes; five evaluators (three detectors and two dentists).
+- **External AI-only:** MOPG-7 Version 2 (https://doi.org/10.17632/t66ytdrhf2.2), 210 test radiographs; 1,088 reference boxes across seven original categories, 876 eligible boxes in the four mapped categories.
+- The external results **do not** constitute an external five-evaluator human–AI comparison.
 
-The auditor verified internal consistency of the output CSV files and reviewed the run's hashes. Repeating the run requires obtaining the original inputs (not included here). See `docs/INPUTS_TO_OBTAIN.txt`.
+## External evaluation — what was reproduced
 
-## Locked protocol
+Using the archived prediction JSON files and official MOPG-7 v2 test annotations, the authors reran class-consistent, maximum-cardinality one-to-one bounding-box matching (then maximum total IoU). The rerun reported `PASS`, with no TP/FP/FN mismatches at IoU 0.50 (primary) and 0.25 (exploratory).
 
-- Internal training ontology: 0 Caries, 1 Missing Teeth, 2 Root Canal Treatment, 3 Filling, 4 Crown, 5 Unerupted Wisdom Teeth.
-- External MOPG-7 official category mapping, **validated against the official class_definitions.csv**: 0 Missing Teeth, 1 Dental Crown, 2 Root Canal, 3 Caries. Other external categories excluded.
-- Model → external class mapping: 0→3, 1→0, 2→2, 4→1; model classes 3 and 5 excluded.
-- Frozen operating confidence thresholds: YOLOv8s 0.40; YOLO11s 0.30; RT-DETR-L 0.50.
-- Bounding boxes matched within class and image, one-to-one, maximizing number of accepted matches then sum of IoUs. Two thresholds: 0.50 primary; 0.25 exploratory.
-- Predictions on test images without mapped reference labels are **not** ignored. Unmatched eligible predictions count as FPs; unmatched eligible reference labels as FNs.
+| Model | Confidence | F1 at IoU 0.50 | F1 at IoU 0.25 |
+|---|---:|---:|---:|
+| RT-DETR-L | 0.50 | 41.47% | 58.42% |
+| YOLOv8s | 0.40 | 37.89% | 52.20% |
+| YOLO11s | 0.30 | 31.76% | 44.44% |
 
-## Requirements and command
+The official COCO file uses placeholder category labels (`class_0` to `class_6`). **The script validates class IDs against the publisher's `metadata/class_definitions.csv`** before scoring. External category mapping: 0 Missing Teeth, 1 Dental Crown, 2 Root Canal, 3 Caries. Model IDs map 0→3, 1→0, 2→2, 4→1; model IDs 3 and 5 are excluded. Predictions on images without a mapped reference remain eligible to count as false positives.
+
+Run the external self-test:
 
 ```bash
 python -m pip install -r requirements.txt
 python code/reproduce_external_mopg7.py --selftest
-python code/reproduce_external_mopg7.py \
-    --coco /path/to/annotations/instances_test.json \
-    --class-definitions /path/to/metadata/class_definitions.csv \
-    --predictions /path/to/private_prediction_jsons \
-    --out /path/to/output
 ```
 
-Expected prediction JSON filenames: `YOLOv8s_predictions.json`, `YOLO11s_predictions.json`, `RT_DETR_L_predictions.json`.
+Then obtain the **official** MOPG-7 Version 2 files `annotations/instances_test.json` and `metadata/class_definitions.csv` from the data publisher, and obtain the original prediction JSONs from the authors (see `docs/INPUTS_TO_OBTAIN.txt`):
 
-Results include `external_per_image_class_recalculated.csv`, `external_per_image_recalculated.csv`, `external_micro_f1_recalculated.csv`, `external_reproduction_audit.json`. If the recomputation does not match archived class counts, the script fails closed by default (do not alter thresholds to force a match).
+```bash
+python code/reproduce_external_mopg7.py \
+  --coco /path/to/annotations/instances_test.json \
+  --class-definitions /path/to/metadata/class_definitions.csv \
+  --predictions /path/to/prediction_jsons \
+  --out external_reproduced_results
+```
 
-## Availability, licensing, and provenance
+Required prediction filenames: `YOLOv8s_predictions.json`, `YOLO11s_predictions.json`, `RT_DETR_L_predictions.json`.
 
-- MOPG-7 Version 2: https://doi.org/10.17632/t66ytdrhf2.2 — download and check license terms directly with the data publisher.
-- Internal DentalOPG-1550 Version 3: https://doi.org/10.17632/rtt726b26d.3
-- This package includes only code and non-image derived numerical reports. It intentionally excludes images, patient data, trained weights, and the three raw prediction JSONs pending the authors' release review.
-- **No software license has been chosen for these authors' code yet.** Do not assert a particular code license until the authors select and add one.
-- Report `reference_file_sha256` and model `prediction_json_sha256` fields correspond to files in the authors' run and enable identity checks. They do not independently verify training provenance.
-- The audit JSON field `category_id_mapping_from_COCO_names` in the archived run should be read as *metadata-verified numeric ID mapping*, since the COCO category names are placeholders (`class_0` etc.) and the official `class_definitions.csv` supplies the semantics. This release script uses the corrected audit field name.
+**Public-data limitation (current release):** The three model prediction JSON files are NOT included in the public repository pending the authors' release check. Consequently, the published code and numerical outputs support method inspection and comparison, but the external recomputation cannot be rerun from this repository **alone**. Model training/inference from checkpoints is also not reproduced. The archived run's file SHA-256 values appear in `results/external_reproduction_audit.json`.
 
-## Publication requirement
+## Internal paired bootstrap — revised analysis
 
-Before claiming public availability in a reviewer response, upload an approved version to the journal-submitted repository, verify the public URL/commit SHA, check all included data and filenames for confidentiality, and add the actual repository link in manuscript and response. The public status should be assessed from the actual GitHub repository or release; this README does not certify archival.
+The primary internal comparison uses 154 radiographs, all five evaluators and six AI-versus-dentist contrasts, with the same image resample drawn for each evaluator. The revised analysis performed **20,000 paired image-level bootstrap replicates**, seed `20261112`, and **Bonferroni-adjusted 99.17% percentile confidence intervals**. This is a **new analysis undertaken during manuscript revision**; it is **not** described as the unknown-seed historical bootstrap.
+
+The input counts are already available in `data/derived/per_image_detection_counts.csv`. To repeat the updated analysis:
+
+```bash
+python code/recalculate_internal_bootstrap.py
+```
+
+Outputs:
+- `results/main_tables/Table_4_Paired_Bootstrap.csv`
+- `results/statistical_audit/Bonferroni_Adjusted_Bootstrap_CIs.csv`
+
+The inputs are per-image detection counts, **not the raw bounding-box annotations**. No patient identifiers are available for patient-level cluster bootstrap. See `results/statistical_audit/internal_bootstrap_new_run_protocol.json`.
+
+## Ethics, reproducibility and licensing
+
+The manuscript reuses publicly released datasets; it involved no new recruitment or imaging. The authors did **not** obtain a separate study-specific written ethics approval or exemption, and do not claim one. This statement does not amount to an institutional determination that ethics review was unnecessary. Follow applicable institutional and journal requirements.
+
+The repository's source code is distributed under the existing **MIT License** in `LICENSE`, subject to confirmation that contributors have authority to license their contributions. This code license does **not** replace the original dataset licenses or grant permission to republish source radiographs. See the publishers' dataset pages for version-specific rights, and verify rights before publishing derived prediction files.
+
+`SHA256_MANIFEST.csv` lists integrity hashes of selected published files. For the current code and result files, refer to the Git commit history for the exact version used.
