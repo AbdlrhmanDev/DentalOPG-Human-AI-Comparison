@@ -1,94 +1,47 @@
-# DentalOPG Human–AI Comparison
+# MOPG-7 external evaluation — reproducibility package
 
-**Study title:** Influence of Bounding-Box Matching Criteria on Human–AI Performance Comparisons for Six Dental Findings in Panoramic Radiographs: A Five-Evaluator Study
+This is a computational reproduction of the four-class *external AI-only evaluation* in the DentalOPG human–AI manuscript. It does **not** re-run model training or inference from weights, nor independently establish clinical diagnostic validity.
 
-Public code and derived results for a retrospective, **annotation-based internal comparison**, not a validated clinical diagnosis system. Three object detectors (YOLOv8s, YOLO11s, RT-DETR-L) and two independently annotating restorative dentists were compared with existing DentalOPG-1550 reference annotations. Full test-set adjudication and independent external validation were **not** performed.
+## What has been checked
 
-## Dataset and methods
+The manuscript's archived prediction files were scored against the official MOPG-7 v2 COCO test reference: 210 images; 1,088 reference boxes across all seven categories, of which 876 are eligible for the four mapped categories. The uploaded run reported `PASS`, with zero mismatched class-specific TP/FP/FN counts at IoU 0.50 and 0.25. Calculated micro-F1 is 41.46868%/58.42333% (RT-DETR-L), 37.89210%/52.19573% (YOLOv8s), and 31.76265%/44.44444% (YOLO11s) for IoU 0.50/0.25.
 
-- **Source:** [DentalOPG-1550, Mendeley Data, version 3](https://doi.org/10.17632/rtt726b26d.3). Original radiographs are **not** redistributed in this repository.
-- **Frozen analytical set:** 1,522 images; train 1,065 / validation 303 / internal test 154; three confirmed duplicates removed from the training partition.
-- **Test reference:** 588 boxes from six classes: Caries, Missing Teeth, Root Canal Treatment, Filling, Crown (source: Cap), and Unerupted Wisdom Teeth.
-- **Locked model operating thresholds:** YOLOv8s 0.40, YOLO11s 0.30, RT-DETR-L 0.50; determined from validation images.
-- **Matching:** class-consistent, cardinality-first, one-to-one, using a primary IoU >= 0.50 and an exploratory post-hoc IoU >= 0.25.
-- **Statistical comparisons:** paired image-level bootstrap, 20,000 replicates (`numpy.random.default_rng(20261014)`), Bonferroni adjustment across six AI-vs-dentist comparisons.
+The auditor verified internal consistency of the output CSV files and reviewed the run's hashes. Repeating the run requires obtaining the original inputs (not included here). See `docs/INPUTS_TO_OBTAIN.txt`.
 
-### Micro-averaged F1 (%) on the internal test set
+## Locked protocol
 
-| Evaluator | IoU >= 0.50 | Exploratory IoU >= 0.25 |
-|---|---:|---:|
-| Dentist 01 | 55.68 | 86.38 |
-| Dentist 02 | 60.97 | 91.12 |
-| YOLOv8s | 64.81 | 74.44 |
-| YOLO11s | 60.47 | 67.72 |
-| RT-DETR-L | 65.48 | 76.90 |
+- Internal training ontology: 0 Caries, 1 Missing Teeth, 2 Root Canal Treatment, 3 Filling, 4 Crown, 5 Unerupted Wisdom Teeth.
+- External MOPG-7 official category mapping, **validated against the official class_definitions.csv**: 0 Missing Teeth, 1 Dental Crown, 2 Root Canal, 3 Caries. Other external categories excluded.
+- Model → external class mapping: 0→3, 1→0, 2→2, 4→1; model classes 3 and 5 excluded.
+- Frozen operating confidence thresholds: YOLOv8s 0.40; YOLO11s 0.30; RT-DETR-L 0.50.
+- Bounding boxes matched within class and image, one-to-one, maximizing number of accepted matches then sum of IoUs. Two thresholds: 0.50 primary; 0.25 exploratory.
+- Predictions on test images without mapped reference labels are **not** ignored. Unmatched eligible predictions count as FPs; unmatched eligible reference labels as FNs.
 
-Values indicate **agreement with dataset boxes**, not independently adjudicated diagnostic sensitivity or clinical superiority.
-
-## Repository structure
-
-```text
-README.md
-LICENSE
-CITATION.cff
-.github/workflows/reproducibility.yml
-.gitignore
-requirements.txt
-code/
-  notebooks/DentalOPG_Research_Pipeline_Clean.ipynb
-  DentalOPG_Reader_Analysis_Engine.py
-  reproduce_metrics.py
-  reproduce_bootstrap.py
-  run_reproducibility_checks.py
-data/derived/
-  README.md
-  per_image_detection_counts.csv
-  per_image_class_detection_counts.csv
-documentation/
-  Training_Configuration_Extract.csv
-  RELEASE_PRIVACY_REVIEW.md
-  RELEASE_CHECKLIST_AR.md
-  REPRODUCIBILITY_VERIFICATION.md
-results/
-  main_tables/Table_1_Test_Dataset.csv
-  main_tables/Table_2_Combined_Performance.csv
-  main_tables/Table_3_Per_Class_F1.csv
-  main_tables/Table_4_Paired_Bootstrap.csv
-  supplementary_tables/Supplementary_Table_S1_Training.csv
-  supplementary_tables/Supplementary_Table_S2_Primary_Per_Class.csv
-  supplementary_tables/Supplementary_Table_S3_IoU_Sensitivity.csv
-  supplementary_tables/Supplementary_Table_S4_Methodology_Audit.csv
-  statistical_audit/Bonferroni_Adjusted_Bootstrap_CIs.csv
-```
-
-## Reproduce the published summary metrics and adjusted bootstrap intervals
-
-Clone the repository, install dependencies in a Python environment, then run:
+## Requirements and command
 
 ```bash
 python -m pip install -r requirements.txt
-python code/reproduce_metrics.py
-python code/reproduce_bootstrap.py --check
-# Or use the combined checker:
-python code/run_reproducibility_checks.py
+python code/reproduce_external_mopg7.py --selftest
+python code/reproduce_external_mopg7.py \
+    --coco /path/to/annotations/instances_test.json \
+    --class-definitions /path/to/metadata/class_definitions.csv \
+    --predictions /path/to/private_prediction_jsons \
+    --out /path/to/output
 ```
 
-The GitHub Actions workflow (`.github/workflows/reproducibility.yml`) runs both checks on each push to `main`, pull request, and release. **Check the green Actions result before archiving.**
+Expected prediction JSON filenames: `YOLOv8s_predictions.json`, `YOLO11s_predictions.json`, `RT_DETR_L_predictions.json`.
 
-`code/reproduce_metrics.py` recomputes 10 evaluator/IoU groups from the public per-image TP/FP/FN counts and checks the main Table 2. `code/reproduce_bootstrap.py` implements the primary IoU >= 0.50 paired 20,000-replicate bootstrap with the **same random seed, case ordering and shared resamples** documented in the research notebook, and checks the published Bonferroni-adjusted Table 4 and audit CSV. The computations do not retrain models or repeat the bounding-box matching against source images. The supplied notebook has its saved execution outputs removed, but retains historical Colab and Google Drive paths and is **not** an independently runnable clean-room training pipeline. Its cells include file modifications and should not be executed indiscriminately.
+Results include `external_per_image_class_recalculated.csv`, `external_per_image_recalculated.csv`, `external_micro_f1_recalculated.csv`, `external_reproduction_audit.json`. If the recomputation does not match archived class counts, the script fails closed by default (do not alter thresholds to force a match).
 
-The original reference images, complete human CVAT exports, predictions and trained model checkpoints are not redistributed here. Patient-level independence could not be established, and the specialist discrepancy review covered only eight selected reference-negative images. See `data/derived/README.md` and the article for further limitations.
+## Availability, licensing, and provenance
 
-## Research integrity and reuse
+- MOPG-7 Version 2: https://doi.org/10.17632/t66ytdrhf2.2 — download and check license terms directly with the data publisher.
+- Internal DentalOPG-1550 Version 3: https://doi.org/10.17632/rtt726b26d.3
+- This package includes only code and non-image derived numerical reports. It intentionally excludes images, patient data, trained weights, and the three raw prediction JSONs pending the authors' release review.
+- **No software license has been chosen for these authors' code yet.** Do not assert a particular code license until the authors select and add one.
+- Report `reference_file_sha256` and model `prediction_json_sha256` fields correspond to files in the authors' run and enable identity checks. They do not independently verify training provenance.
+- The audit JSON field `category_id_mapping_from_COCO_names` in the archived run should be read as *metadata-verified numeric ID mapping*, since the COCO category names are placeholders (`class_0` etc.) and the official `class_definitions.csv` supplies the semantics. This release script uses the corrected audit field name.
 
-The repository's **MIT license covers original software code** to the extent it is owned and licensable by the listed contributors. It does **not** supersede the original DentalOPG-1550 dataset's license or independently establish redistribution rights for radiographs. Users must obtain original images via Mendeley Data and comply with its license. The numerical derivative tables are published as research outputs; any reuse should cite this repository and the underlying source dataset and comply with applicable rights.
+## Publication requirement
 
-`documentation/RELEASE_PRIVACY_REVIEW.md` describes the audit limitations and the separately documented historical notebook with embedded outputs. A previous commit can remain retrievable after deletion from the main branch. The maintainers should verify the historical material and, if necessary, purge sensitive content from the full Git history before official archiving.
-
-## Citation and archival DOI
-
-Use the `CITATION.cff` metadata for software citation. **Before creating the first GitHub Release or triggering Zenodo archiving, replace its provisional group-author entry with the correct, approved researcher and code contributor names.** No Zenodo DOI has been assigned yet; add the registered DOI and release metadata **after** successful Zenodo archiving. The original dataset DOI is not the software's DOI.
-
-## Status
-
-Research artefacts are publicly visible. An **archived, fully verified v1.0.0 release is pending** the owner's final privacy, contributor metadata and reproducibility checks. Do not describe a pending Zenodo record as published.
+Before claiming public availability in a reviewer response, upload an approved version to the journal-submitted repository, verify the public URL/commit SHA, check all included data and filenames for confidentiality, and add the actual repository link in manuscript and response. The public status should be assessed from the actual GitHub repository or release; this README does not certify archival.

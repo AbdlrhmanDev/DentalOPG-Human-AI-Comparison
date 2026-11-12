@@ -1,0 +1,8 @@
+OFFICIAL INPUTS NOT INCLUDED IN THIS CANDIDATE PACKAGE:
+1) MOPG-7 Version 2 / annotations/instances_test.json (210-image official test split)
+2) MOPG-7 Version 2 / metadata/class_definitions.csv (defines semantic category IDs)
+3) Archived prediction JSONs at low confidence floor 0.01: YOLOv8s_predictions.json, YOLO11s_predictions.json, RT_DETR_L_predictions.json
+
+Do not publish radiographs or patient-identifying information.
+The source COCO test file and metadata must be obtained from the data publisher.
+The prediction JSONs are in the authors' private archive; confirm rights/ethical clearance before any public distribution.

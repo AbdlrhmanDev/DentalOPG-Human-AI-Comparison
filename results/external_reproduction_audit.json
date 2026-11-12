@@ -1,0 +1,34 @@
+{
+  "dataset": "MOPG-7 Version 2 official COCO test",
+  "reference_file_sha256": "2962a0cafb10b4d0b254df90b3e2e9077b67f46f8d81346d7ab76609fe0b533a",
+  "n_images": 210,
+  "all_reference_boxes": 1088,
+  "eligible_reference_boxes": 876,
+  "category_id_mapping_from_COCO_names": {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3
+  },
+  "predictions": {
+    "YOLOv8s": {
+      "prediction_json_sha256": "09beeefb407f3c895ffc61bd9a3635f0f7ad0aab32a420961633f829ac25facd",
+      "checkpoint_sha256_reported": "b22fea3eea3f0949956ca465a028df97b12b0cf9bde1d5a834bdb66a69e0c26f",
+      "selected_confidence": 0.4
+    },
+    "YOLO11s": {
+      "prediction_json_sha256": "16867e764b56ac61d08cc183c728a08dbaea2f963da7b8ef963b9eb3143fa15e",
+      "checkpoint_sha256_reported": "926ce97b24d2d41d6bc9705a16a1604def1e64200b71cd4c44de762a1f1099c4",
+      "selected_confidence": 0.3
+    },
+    "RT-DETR-L": {
+      "prediction_json_sha256": "81d152d4cffc77343ab3420322e12100d51f320aabe9ae315606882da4231313",
+      "checkpoint_sha256_reported": "589a816fc93d6c2810201de0115fad3ba452f59b93cc5137dbdac6a5e1ab103e",
+      "selected_confidence": 0.5
+    }
+  },
+  "comparison_against_archived_class_counts": "PASS",
+  "mismatches": [],
+  "matching": "max-cardinality one-to-one followed by maximum summed IoU",
+  "note": "Failure to reproduce may indicate a different dataset version, matching implementation or postprocessing; do not silently change thresholds."
+}

@@ -1,0 +1,39 @@
+{
+  "source_zip": "/content/mopg7_nested_1.zip",
+  "files_found": [
+    "metadata/class_definitions.csv",
+    "metadata/image_metadata.csv"
+  ],
+  "acquisition_columns": {
+    "metadata/class_definitions.csv": {
+      "row_count": 7,
+      "fields": {},
+      "all_column_names": [
+        "class_id",
+        "class_name",
+        "annotation_count",
+        "description"
+      ]
+    },
+    "metadata/image_metadata.csv": {
+      "row_count": 2095,
+      "fields": {
+        "width": {
+          "nonmissing": 2095
+        },
+        "height": {
+          "nonmissing": 2095
+        }
+      },
+      "all_column_names": [
+        "image_id",
+        "split",
+        "file_name",
+        "width",
+        "height",
+        "annotation_count"
+      ]
+    }
+  },
+  "notes": []
+}
